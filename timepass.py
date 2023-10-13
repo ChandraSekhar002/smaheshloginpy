@@ -14,18 +14,19 @@ db_config = {
 
 class MyHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path == '/':
+        if self.path == '/register':
             self.send_response(200)
             self.send_header('Content-type', 'text/html')
             self.end_headers()
             self.wfile.write(b'Welcome to the registration and login system!')
-        elif self.path == '/register':
+        elif self.path == '/':
             # Display the registration form
+            #self.wfile.write(b'Welcome to the registration and login system!')
             self.send_response(200)
             self.send_header('Content-type', 'text/html')
             self.end_headers()
             registration_form = """
-                <form method="POST" action="/register">
+                <form method="POST" action="/">
                     Username: <input type="text" name="username"><br>
                     Password: <input type="password" name="password"><br>
                     <input type="submit" value="Register">
@@ -49,7 +50,7 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(content_length).decode('utf-8')
-        if self.path == '/register':
+        if self.path == '/':
             # Handle registration logic
             form_data = parse_post_data(post_data)
             username = form_data.get('username')
@@ -118,6 +119,6 @@ def parse_post_data(post_data):
     return data
 
 if __name__ == '__main__':
-    httpd = socketserver.TCPServer(('', 8000), MyHandler)
+    httpd = socketserver.TCPServer(('', 8004), MyHandler)
     print('Listening on port 8000...')
     httpd.serve_forever()
